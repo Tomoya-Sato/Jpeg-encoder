@@ -22,7 +22,7 @@ void check_error(FILE* n, const char* p);
 
 class Jpegencoder {
  public:
-  Jpegencoder(char input[64], char output[64], int x_size, int y_size) {
+  Jpegencoder(char input[64], char output[64]) {
     check_error(strcpy(input_path_, input), "input_path_ strcpy");
     check_error(strcpy(output_path_, output), "output_path_, strcpy");
     check_error((input_fp_ = fopen(input_path_, "rb")), "input_fp_ fopen");

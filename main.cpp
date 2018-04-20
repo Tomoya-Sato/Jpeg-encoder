@@ -1,24 +1,33 @@
-#include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
 #include "encode.h"
 
 int main(int argc, char* argv[])
 {
-  if (argc != 5) 
-    fprintf(stderr, "argument error\n");
-  
-  Jpegencoder pic(argv[1], argv[2], atoi(argv[3]), atoi(argv[4]));
-  pic.inputPpm();
-  pic.makeHeader();
-  pic.convertYCbCr();
-  //pic.printPic();
-  pic.DCTconvert();
-  pic.freeYCbCr();
-  pic.quantization();
-  //pic.printQuant();
-  pic.huffman();
-  pic.freeDCT();
-  pic.endHeader();
-
-  return 0;
+	if (argc != 3) {
+		fprintf(stderr, "argument error\n");
+		exit(1);
+	}
+		
+	Jpegencoder pic(argv[1], argv[2]);
+	pic.inputPpm();
+	std::cout << "inputPpm..." << std::endl;
+	pic.makeHeader();
+	std::cout << "makeHeader..." << std::endl;	
+	pic.convertYCbCr();
+	std::cout << "convertYCbCr..." << std::endl;		
+	//pic.printPic();
+	pic.DCTconvert();
+	std::cout << "DCTconvert..." << std::endl;		
+	pic.freeYCbCr();
+	pic.quantization();
+	std::cout << "quantization..." << std::endl;		
+	//pic.printQuant();
+	pic.huffman();
+	std::cout << "huffman..." << std::endl;		
+	pic.freeDCT();
+	pic.endHeader();
+	std::cout << "complete!" << std::endl;
+	
+	return 0;
 }
