@@ -1,3 +1,4 @@
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -363,8 +364,8 @@ void Jpegencoder::makeHeader() {
     0xff, 0xc0, /* marker */
     0x00, 0x11, /* length of segment */
     0x08,       /* sample accuracy */
-    x0, x1,     /* vertical size */
-    y0, y1,     /* horizontal size */
+    y0, y1,     /* vertical size */
+    x0, x1,     /* horizontal size */
     0x03,       /* element number */
     0x01,       /* element ID */
     0x22,       /* v-sample | h-sample */
@@ -398,7 +399,7 @@ void Jpegencoder::convertYCbCr()
   fixed_y_ = y_size_;
 
   if ((fixed_x_ % 16) != 0) fixed_x_ = fixed_x_ + (16 - (fixed_x_ % 16));
-  if ((fixed_y_ % 16) != 0) fixed_x_ = fixed_x_ + (16 - (fixed_x_ % 16));
+  if ((fixed_y_ % 16) != 0) fixed_y_ = fixed_y_ + (16 - (fixed_y_ % 16));
 
   col_y_ = (int*)malloc(sizeof(int)*fixed_x_*fixed_y_);
   col_cb_ = (int*)malloc(sizeof(int)*fixed_x_*fixed_y_/4);
@@ -411,11 +412,11 @@ void Jpegencoder::convertYCbCr()
       col_y_[tmp] = (int)((0.2990 * pPic_->r[tmp2]) + (0.5870 * pPic_->g[tmp2]) 
 			  + (0.1140 * pPic_->b[tmp2]) - 128);
       if ((i % 2 == 0) && (j % 2 == 0)) {
-	tmp3 = j / 2 + (i / 2) * (fixed_x_ / 2);
-	col_cb_[tmp3] = (int)(-(0.1687 * pPic_->r[tmp2]) - (0.3313 * pPic_->g[tmp2])
-			     + (0.5000 * pPic_->b[tmp2]));
-	col_cr_[tmp3] = (int)((0.5000 * pPic_->r[tmp2]) - (0.4187 * pPic_->g[tmp2])
-			     - (0.0813 * pPic_->b[tmp2]));
+		  tmp3 = j / 2 + (i / 2) * (fixed_x_ / 2);
+		  col_cb_[tmp3] = (int)(-(0.1687 * pPic_->r[tmp2]) - (0.3313 * pPic_->g[tmp2])
+								+ (0.5000 * pPic_->b[tmp2]));
+		  col_cr_[tmp3] = (int)((0.5000 * pPic_->r[tmp2]) - (0.4187 * pPic_->g[tmp2])
+								- (0.0813 * pPic_->b[tmp2]));
       }
     }
   }
@@ -442,7 +443,7 @@ void Jpegencoder::convertYCbCr()
   }
 
   for (i = 0; i < y_size_/2; i++) {
-    tmp = x_size_/2 - 1 + j * fixed_x_;
+    tmp = x_size_ / 2 - 1 + j * fixed_x_ / 2;
     for (j = x_size_/2; j < fixed_x_/2; j++) {
       tmp2 = j + i * fixed_x_/2;
       col_cb_[tmp2] = col_cb_[tmp];
@@ -450,11 +451,11 @@ void Jpegencoder::convertYCbCr()
     }
   }
   for (j = 0; j < x_size_/2; j++) {
-    tmp = j + (y_size_ - 1) * fixed_x_;
+    tmp = j + (y_size_ / 2 - 1) * fixed_x_ / 2;
     for (i = y_size_/2; i < fixed_y_/2; i++) {
-      tmp2 = j + i * fixed_x_/2;
-      col_cb_[tmp2] = col_cb_[tmp];
-      col_cr_[tmp2] = col_cr_[tmp];
+		tmp2 = j + i * fixed_x_/2;
+		col_cb_[tmp2] = col_cb_[tmp];
+		col_cr_[tmp2] = col_cr_[tmp];
     }
   }
   tmp = (x_size_/2 - 1) + (y_size_/2 - 1) * fixed_x_/2;
@@ -603,7 +604,7 @@ void Jpegencoder::quantization()
 
   x1 = x1 / 2;
   y1 = y1 / 2;
-  
+
   for (m = 0; m < y1; m++) {
     for (n = 0; n < x1; n++) {
       for (i = 0; i < 8; i++) {
@@ -848,8 +849,6 @@ void Jpegencoder::huffman()
     cr[i] = new int[64];
   }
 
-  y[63][63][63] = 1;
-  
   for (j = 0; j < y1; j++) {
     for (i = 0; i < x1; i++) {
       for (l = 0; l < 8; l++) {
