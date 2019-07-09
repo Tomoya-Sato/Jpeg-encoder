@@ -8,6 +8,10 @@ jobs:
       - checkout
 
       - run:
+          name: Update apt
+          command: apt update
+
+      - run:
           name: Installing make
           command: apt install -y build-essential
 
