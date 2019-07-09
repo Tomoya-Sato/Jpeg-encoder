@@ -8,13 +8,9 @@ jobs:
       - checkout
 
       - run:
-          name: Greeting
-          command: echo Hello, world.
+          name: Installing make
+          command: apt install -y build-essential
 
-      - run:
-          name: Print the Current Time
-          command: date
-      
       - run:
           name: Build
           command: make
